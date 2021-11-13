@@ -21,11 +21,15 @@
                 <h3><a href="/room/{{room.id}}/">{{room.name}}</a></h3>
                     Capacity: {{room.capacity}}, 
                     Projektor: {% if room.projector == True %}
-                        Yes
+                        Yes,
                         {% else %}
-                        No
+                        No,
                         {% endif %}
-                    Available now: {uzupełnić}
+                    Available now: {% if room.available == True %}
+                        Yes,
+                        {% else %}
+                        No,
+                        {% endif %}
                     <a href="/room/modify/{{room.id}}/"><button>Edit</button></a>
                     <a href="/room/delete/{{room.id}}/"><button>Delete</button></a>
                     <a href="/room/reserve/{{room.id}}/"><button>Reserve</button></a>

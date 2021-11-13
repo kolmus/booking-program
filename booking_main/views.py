@@ -1,10 +1,10 @@
-from django import http
 from django.shortcuts import render, redirect
 from django.views import View
-from booking_main.models import Rooms
+from booking_main.models import Rooms, Reservations
 from django.db import IntegrityError
+from datetime import date
 
-class Room(View):
+class Room_view(View):
     def post(self, request):
         name_new = request.POST['name']
         capacity = int(request.POST['capacity'])
@@ -16,10 +16,6 @@ class Room(View):
         if capacity <= 0:
             return render(request, 'add_room.html', {'response': 'Capacity has to be grater than 0!'})
         
-        rooms = Rooms.objects.all()
-        names = []
-        for room in rooms:
-            names.append(room)
         try:
             new_room.name = name_new
             new_room.capacity = capacity
@@ -28,7 +24,7 @@ class Room(View):
         except IntegrityError:
             return render(request, 'add_room.html', {'response': '{} already exists. Try other name'.format(name_new)})
             
-        return render(request, 'add_room.html', {'response': 'udało się'})
+        return redirect('/')
     
     def get(self, request):
         return render(request, 'add_room.html')
@@ -42,4 +38,57 @@ def delete_room(request, id_):
     room = Rooms.objects.get(id=id_)
     room.delete()
     return redirect('/')
+
+class Modify_room(View):
+    def get(self, request, id_):
+        room = Rooms.objects.get(id=id_)
+        return render(request, 'modify_room.html', {'room': room})
+
+    def post(self, request, id_):
+        room = Rooms.objects.get(id=id_)
+        name_new = request.POST['name']
+        capacity_new = int(request.POST['capacity'])
+        projector_new = bool(request.POST.get('projector'))
+        
+        if name_new == '':
+            return render(request, 'modify_room.html', {'response': "Name can't be empty!"})
+        if capacity_new <= 0:
+            return render(request, 'modify_room.html', {'response': 'Capacity has to be grater than 0!'})
+        
+        try:
+            room.name = name_new
+            room.capacity = capacity_new
+            room.projector = projector_new
+            room.save()
+        except IntegrityError:
+            return render(request, 'modify_room.html', {'response': '{} already exists. Try other name'.format(name_new)})
+        
+        return redirect('/')
+
+class Reservation_view(View):
+    def get(self, request, id_):
+        return render(request, 'reservation.html')
     
+    def post(self, request, id_):
+        date_of_reservation = request.POST['date']
+        room = Rooms.objects.get(id=id_)
+        reserved_dates = room.reservations.all()
+        list_of_dates = []
+        for object in reserved_dates:
+            list_of_dates.append(object.date)
+        
+        if str(date.today()) > date_of_reservation:
+            return render(request, 'reservation.html', {'response': "Date is in the past. Try again"})
+        
+        try:
+            new_reservation = Reservations()
+            new_reservation.date = date_of_reservation
+            new_reservation.room = room
+            new_reservation.comment = request.POST['comment']
+            new_reservation.save()
+        except IntegrityError:
+            return render(request, 'reservation.html', {'response': "This room already has reservation for this day. Try another date or another room."})
+        return redirect('/')
+    
+def room_details(request, id_):
+    pass
