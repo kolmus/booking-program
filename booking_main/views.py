@@ -1,4 +1,5 @@
-from django.shortcuts import render
+from django import http
+from django.shortcuts import render, redirect
 from django.views import View
 from booking_main.models import Rooms
 from django.db import IntegrityError
@@ -34,4 +35,11 @@ class Room(View):
 
 
 def allrooms(request):
-    return render(request, 'index.html')
+    rooms = Rooms.objects.all()
+    return render(request, 'index.html', {'all_rooms': rooms})
+
+def delete_room(request, id_):
+    room = Rooms.objects.get(id=id_)
+    room.delete()
+    return redirect('/')
+    

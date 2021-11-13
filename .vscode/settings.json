@@ -1,0 +1,14 @@
+{
+    "sqltools.connections": [
+        {
+            "previewLimit": 50,
+            "server": "localhost",
+            "port": 5432,
+            "driver": "PostgreSQL",
+            "database": "booking_db",
+            "username": "postgres",
+            "password": "coderslab",
+            "name": "ooking_db"
+        }
+    ]
+}

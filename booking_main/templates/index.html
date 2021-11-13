@@ -9,23 +9,28 @@
 <body>
 <div>
     <ul>
-        <li>All rooms</li>
+        <li><a href="/">All rooms</a></li>
         <li><a href="/room/new/">Add room</a></li>
     </ul>
 </div>
 <div>
     <h1>List of rooms</h1>
     <ul>
-    {% for room in all_roooms %}
-        <li>
-            <h3>{room.name}</h3>
-                Capacity: {{room.capacity}}, Projektor: {% if room.projector == True %}
-                Yes
-                {% else %}
-                No
-                {% endif %}
-        </li>
-    {% endfor %}
+        {% for room in all_rooms %}
+            <li>
+                <h3><a href="/room/{{room.id}}/">{{room.name}}</a></h3>
+                    Capacity: {{room.capacity}}, 
+                    Projektor: {% if room.projector == True %}
+                        Yes
+                        {% else %}
+                        No
+                        {% endif %}
+                    Available now: {uzupełnić}
+                    <a href="/room/modify/{{room.id}}/"><button>Edit</button></a>
+                    <a href="/room/delete/{{room.id}}/"><button>Delete</button></a>
+                    <a href="/room/reserve/{{room.id}}/"><button>Reserve</button></a>
+            </li>
+        {% endfor %}
     </ul>
 </div>
 <footer>
