@@ -29,9 +29,15 @@ class Room_view(View):
     def get(self, request):
         return render(request, 'add_room.html')
 
-
 def allrooms(request):
-    rooms = Rooms.objects.all()
+    rooms = Rooms.objects.all().order_by('id')
+    for room in rooms:
+        reservations = room.reservations.all()
+        room.available = True
+        for reservation in reservations:
+            if reservation.date == date.today():
+                room.available = False
+        room.save()
     return render(request, 'index.html', {'all_rooms': rooms})
 
 def delete_room(request, id_):
@@ -67,18 +73,16 @@ class Modify_room(View):
 
 class Reservation_view(View):
     def get(self, request, id_):
-        return render(request, 'reservation.html')
+        reservations_all = Reservations.objects.all()
+        return render(request, 'reservation.html', {'reservations': reservations_all})
     
     def post(self, request, id_):
         date_of_reservation = request.POST['date']
         room = Rooms.objects.get(id=id_)
-        reserved_dates = room.reservations.all()
-        list_of_dates = []
-        for object in reserved_dates:
-            list_of_dates.append(object.date)
+        reservations_all = Reservations.objects.all()
         
         if str(date.today()) > date_of_reservation:
-            return render(request, 'reservation.html', {'response': "Date is in the past. Try again"})
+            return render(request, 'reservation.html', {'response': "Date is in the past. Try again", 'reservations': reservations_all})
         
         try:
             new_reservation = Reservations()
@@ -87,8 +91,10 @@ class Reservation_view(View):
             new_reservation.comment = request.POST['comment']
             new_reservation.save()
         except IntegrityError:
-            return render(request, 'reservation.html', {'response': "This room already has reservation for this day. Try another date or another room."})
+            return render(request, 'reservation.html', {'response': "This room already has reservation for this day. Try another date or another room.", 'reservations': reservations_all})
         return redirect('/')
-    
+
 def room_details(request, id_):
-    pass
+    room = Rooms.objects.get(id=id_)
+    reservations = room.reservations.filter(date__gte=str(date.today())) #później odfiltrować daty z przeszłości
+    return render(request, 'room_details.html', {'room': room, 'reservations': reservations})

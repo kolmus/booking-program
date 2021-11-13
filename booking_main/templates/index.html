@@ -9,18 +9,18 @@
 <body>
 <div>
     <ul>
-        <li><a href="/">All rooms</a></li>
-        <li><a href="/room/new/">Add room</a></li>
+        <li><a href="/"><button>All rooms</button></a></li>
+        <li><a href="/room/new/"><button>Add room</a></button></li>
     </ul>
 </div>
 <div>
-    <h1>List of rooms</h1>
+    <h1>List of rooms    {{ today }}</h1>
     <ul>
         {% for room in all_rooms %}
             <li>
                 <h3><a href="/room/{{room.id}}/">{{room.name}}</a></h3>
                     Capacity: {{room.capacity}}, 
-                    Projektor: {% if room.projector == True %}
+                    Projector: {% if room.projector == True %}
                         Yes,
                         {% else %}
                         No,

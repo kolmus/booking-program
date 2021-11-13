@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book the conferrence room</title>
+</head>
+<body>
+    <div>
+        <ul>
+            <li><a href="/"><button>All rooms</button></a></li>
+            <li><a href="/room/new/"><button>Add room</a></button></li>
+        </ul>
+    </div>
+<div>
+    <h1>Room details</h1>
+        <h2>{{ room.name }}</h2>
+        Capacity: {{room.capacity}}, <br>
+        Projector: {% if room.projector == True %}
+            Yes,<br>
+        {% else %}
+            No,<br>
+        {% endif %}
+        Available now: {% if room.available == True %}
+            Yes,<br>
+        {% else %}
+            No,<br>
+        {% endif %}
+        <h3>Reservations:</h3>
+        <ul>
+        {% for object in reservations %}
+            <li>
+                Date: {{  object.date  }}, <br>
+                Comment: {{  object.comment  }}<br><br>
+            </li>
+        {% endfor %}</ul>
+        <a href="/room/modify/{{room.id}}/"><button>Edit</button></a>
+        <a href="/room/delete/{{room.id}}/"><button>Delete</button></a>
+        <a href="/room/reserve/{{room.id}}/"><button>Reserve</button></a>
+
+</div>
+<footer>
+    Author: Łukasz Kolmus
+</footer>
+</body>
+</html>

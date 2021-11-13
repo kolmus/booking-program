@@ -7,11 +7,12 @@
     <title>Book the conferrence room</title>
 </head>
 <body>
-<div>
-    <ul>
-        <li><a href="/">All rooms</a></li>
-        <li><a href="/room/new/">Add room</a></li>
-    </ul>
+    <div>
+        <ul>
+            <li><a href="/"><button>All rooms</button></a></li>
+            <li><a href="/room/new/"><button>Add room</a></button></li>
+        </ul>
+    </div>
 <div>
     <form method="post">
         {% csrf_token %}
@@ -24,7 +25,7 @@
 <div>
     {{response}}
 </div>
-</div>
+
 <footer>
     Author: Łukasz Kolmus
 </footer>

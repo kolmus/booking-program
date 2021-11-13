@@ -9,9 +9,10 @@
 <body>
 <div>
     <ul>
-        <li><a href="/">All rooms</a></li>
-        <li><a href="/room/new/">Add room</a></li>
+        <li><a href="/"><button>All rooms</button></a></li>
+        <li><a href="/room/new/"><button>Add room</a></button></li>
     </ul>
+</div>
 <div>
     <form method="post">
         {% csrf_token %}
@@ -21,8 +22,16 @@
     </form>
 </div>
 <div>
-    {{response}}
-</div>
+    {{response}}<br><br>
+    <h3>Reservations:</h3>
+    <ul>
+    {% for object in reservations %}
+        <li>
+            Date: {{  object.date  }}, <br>
+            Comment: {{  object.comment  }}<br><br>
+        </li>
+    {% endfor %}</ul>
+
 </div>
 <footer>
     Author: Łukasz Kolmus
