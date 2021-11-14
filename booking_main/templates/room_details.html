@@ -17,11 +17,13 @@
     <h1>Room details</h1>
         <h2>{{ room.name }}</h2>
         Capacity: {{room.capacity}}, <br>
+
         Projector: {% if room.projector == True %}
             Yes,<br>
         {% else %}
             No,<br>
         {% endif %}
+        
         Available now: {% if room.available == True %}
             Yes,<br>
         {% else %}

@@ -4,8 +4,25 @@ from booking_main.models import Rooms, Reservations
 from django.db import IntegrityError
 from datetime import date
 
-class Room_view(View):
+class New_Room_view(View):
+    """View for adding new room into database
+
+    Args:
+        View (parent class): from django
+    """    
     def post(self, request):
+        """Own POST metod for Room_view
+
+        Args:
+            name (str): name of new room
+            capacity (str): number of sits in new room
+            projector (str): request from checkbox from html 
+
+        Returns:
+            response (str): answers for exceptions
+            redirect to main page after save changes
+        """        
+        
         name_new = request.POST['name']
         capacity = int(request.POST['capacity'])
         projector = bool(request.POST.get('projector'))
@@ -27,9 +44,21 @@ class Room_view(View):
         return redirect('/')
     
     def get(self, request):
+        """Own GET metod of Room_view
+
+        Returns:
+            connection to add_room.html template
+        """        
         return render(request, 'add_room.html')
 
 def allrooms(request):
+    """View of main page.
+    Included checking of every room availability during checking.
+    
+    Returns:
+        connection to index.html
+        all_rooms: Query Set with objects of Rooms model
+    """    
     rooms = Rooms.objects.all().order_by('id')
     for room in rooms:
         reservations = room.reservations.all()
@@ -41,16 +70,49 @@ def allrooms(request):
     return render(request, 'index.html', {'all_rooms': rooms})
 
 def delete_room(request, id_):
+    """View for deleting rooms from database
+
+    Args:
+        id_ (int): id of room 
+
+    Returns:
+        redirect to main page
+    """    
     room = Rooms.objects.get(id=id_)
     room.delete()
     return redirect('/')
 
 class Modify_room(View):
+    """View created to modify rooms.
+
+     Args:
+        View (parent class): from django
+    """      
     def get(self, request, id_):
+        """Own get metod for Modify_room class
+
+        Args:
+            request : from django
+            id_ (int): id of object in Rooms class / of room
+
+        Returns:
+            render to template modify_room.html 
+            room : object with id: id_ in Rooms model
+        """        
         room = Rooms.objects.get(id=id_)
         return render(request, 'modify_room.html', {'room': room})
 
     def post(self, request, id_):
+        """Own get metod for Modify_room class
+
+        Args:
+            request : from django
+            id_ (int): id of object in Rooms class / of room
+
+        Returns:
+            render to main page or 
+            response : message afcer catching exeptions
+        """        
         room = Rooms.objects.get(id=id_)
         name_new = request.POST['name']
         capacity_new = int(request.POST['capacity'])
@@ -72,11 +134,37 @@ class Modify_room(View):
         return redirect('/')
 
 class Reservation_view(View):
+    """View of reservating rooms
+
+    Args:
+        View : from Django
+    """    
     def get(self, request, id_):
+        """Own get metod for Reservation_view class
+
+        Args:
+            request : from django
+            id_ (int): id of object in Rooms class / of room
+
+        Returns:
+            render to template modify_room.html 
+            reservations : Query set of Reservatios model
+        """
         reservations_all = Reservations.objects.all()
         return render(request, 'reservation.html', {'reservations': reservations_all})
     
     def post(self, request, id_):
+        """Own post metod for Reservation_view class
+
+        Args:
+            request : from django
+            id_ (int): id of object in Rooms class / of room
+
+        Returns:
+            rdeirect to main page 
+            reservations_all : Query set of Reservatios model
+            response : message after cathing exeption
+        """
         date_of_reservation = request.POST['date']
         room = Rooms.objects.get(id=id_)
         reservations_all = Reservations.objects.all()
@@ -95,6 +183,16 @@ class Reservation_view(View):
         return redirect('/')
 
 def room_details(request, id_):
+    """View created to shof details of room
+
+    Args:
+        request : fro django
+        id_ (int): id of room object of Romms model
+
+    Returns:
+        room: object of Rooms model
+        reservations: Guery Set of Reservations model
+    """    
     room = Rooms.objects.get(id=id_)
     reservations = room.reservations.filter(date__gte=str(date.today())) #później odfiltrować daty z przeszłości
     return render(request, 'room_details.html', {'room': room, 'reservations': reservations})
