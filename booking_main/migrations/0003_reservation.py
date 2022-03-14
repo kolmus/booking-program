@@ -7,19 +7,19 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('booking_main', '0002_rooms_available'),
+        ("booking_main", "0002_rooms_available"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Reservation',
+            name="Reservation",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('date', models.DateField()),
-                ('room', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='booking_main.rooms')),
+                ("id", models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name="ID")),
+                ("date", models.DateField()),
+                ("room", models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to="booking_main.rooms")),
             ],
             options={
-                'unique_together': {('date', 'room')},
+                "unique_together": {("date", "room")},
             },
         ),
     ]

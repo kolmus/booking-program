@@ -6,12 +6,12 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('booking_main', '0005_alter_reservation_room'),
+        ("booking_main", "0005_alter_reservation_room"),
     ]
 
     operations = [
         migrations.RenameModel(
-            old_name='Reservation',
-            new_name='Reservations',
+            old_name="Reservation",
+            new_name="Reservations",
         ),
     ]
